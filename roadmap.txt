@@ -1,0 +1,12 @@
+-*- mode:org; -*-
+
+* DONE one falling block
+* DONE fall and reside at bottom
+* DONE game over when reached top
+* DONE rotate block with key input
+* DONE random new blocks
+* DONE clear line when line is full
+* DONE all 7 kinds of blocks
+* DONE clear line with animation
+* DONE draw pseudo 3D border of blocks
+* attempt adjust to left or right one tile when rotation fails
