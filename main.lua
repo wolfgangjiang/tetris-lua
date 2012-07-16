@@ -12,8 +12,8 @@ REMOVE_ROWS_ANIMATION_INTERVAL = 0
 
 BORDER_WIDTH_RATIO = 0.25
 BRIGHT_ALPHA = 255
-NORMAL_ALPHA = 150
-DARK_ALPHA = 50
+NORMAL_ALPHA = 190
+DARK_ALPHA = 90
 
 -- -----------------------------------------------------
 
@@ -78,7 +78,8 @@ end
 
 -- ------------------------------------------------------
 
-StockBlocks = { { start_position = { x = 4, y = 1 },
+StockBlocks = { { start_position = { x = 4, y = 1 },  -- T
+                  color = { 175, 175, 0 },
                   transformations = { { { x = -1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
@@ -95,7 +96,8 @@ StockBlocks = { { start_position = { x = 4, y = 1 },
                                         { x = 0, y = -1 },
                                         { x = 0, y = 1 },
                                         { x = -1, y = 0 } } } },
-                { start_position = { x = 4, y = 1 },
+                { start_position = { x = 4, y = 1 },  -- Z
+                  color = { 0, 255, 0 },
                   transformations = { { { x = -1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 0, y = -1 },
@@ -104,7 +106,8 @@ StockBlocks = { { start_position = { x = 4, y = 1 },
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
                                         { x = 1, y = 1 } } } },
-                { start_position = { x = 4, y = 1 },
+                { start_position = { x = 4, y = 1 },  -- S
+                  color = { 100, 100, 175 },
                   transformations = { { { x = 1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 0, y = -1 },
@@ -113,7 +116,8 @@ StockBlocks = { { start_position = { x = 4, y = 1 },
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
                                         { x = 1, y = -1 } } } },
-                { start_position = { x = 4, y = 0 },
+                { start_position = { x = 4, y = 0 },  -- J
+                  color = { 255, 255, 100 },
                   transformations = { { { x = -1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
@@ -130,7 +134,8 @@ StockBlocks = { { start_position = { x = 4, y = 1 },
                                         { x = 0, y = 0 },
                                         { x = 0, y = 1 },
                                         { x = -1, y = -1 } } } },
-                { start_position = { x = 4, y = 0 },
+                { start_position = { x = 4, y = 0 },  -- L
+                  color = { 255, 0, 255 },
                   transformations = { { { x = -1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
@@ -147,7 +152,8 @@ StockBlocks = { { start_position = { x = 4, y = 1 },
                                         { x = 0, y = 0 },
                                         { x = 0, y = 1 },
                                         { x = -1, y = 1 } } } },
-                { start_position = { x = 4, y = 0 },
+                { start_position = { x = 4, y = 0 },  -- I
+                  color = { 255, 0, 0 },
                   transformations = { { { x = -1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
@@ -156,7 +162,8 @@ StockBlocks = { { start_position = { x = 4, y = 1 },
                                         { x = 0, y = 0 },
                                         { x = 0, y = 1 },
                                         { x = 0, y = 2 } } } },
-                { start_position = { x = 4, y = 0 },
+                { start_position = { x = 4, y = 0 }, -- []
+                  color = { 0, 0, 255 },
                   transformations = { { { x = 0, y = 0 },
                                         { x = 0, y = 1 },
                                         { x = 1, y = 0 },
@@ -396,16 +403,15 @@ function Tetris.graphics.draw_fps()
 end
 
 function Tetris.graphics.draw_active_block()
+   c = StockBlocks[Tetris.state.active_block.stock_index].color
+   love.graphics.setColor(c[1], c[2], c[3], 255)
    Tetris.graphics.draw_block(Tetris.state.active_block)
+   love.graphics.setColor(255, 255, 255, 255)
 end
 
 function Tetris.graphics.draw_passive_blocks()
    love.graphics.setColor(150, 150, 200, 255)
    _.each(Tetris.state.passive_blocks, Tetris.graphics.draw_block)
-          -- function (block)
-          --    local actual_positions = Tetris.util.get_actual_tile_positions(block)
-          --    _.each(actual_positions, Tetris.graphics.draw_tile)
-          -- end)
    love.graphics.setColor(255, 255, 255, 255)
 end
 

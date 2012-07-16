@@ -9,4 +9,5 @@
 * DONE all 7 kinds of blocks
 * DONE clear line with animation
 * DONE draw pseudo 3D border of blocks
+* colorful active blocks
 * attempt adjust to left or right one tile when rotation fails
