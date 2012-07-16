@@ -78,8 +78,9 @@ end
 
 -- ------------------------------------------------------
 
-StockBlocks = { { start_position = { x = 4, y = 1 },  -- T
+StockBlocks = { { start_position = { x = 4, y = 1 },
                   color = { 175, 175, 0 },
+                  symbol = "T",
                   transformations = { { { x = -1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
@@ -96,8 +97,9 @@ StockBlocks = { { start_position = { x = 4, y = 1 },  -- T
                                         { x = 0, y = -1 },
                                         { x = 0, y = 1 },
                                         { x = -1, y = 0 } } } },
-                { start_position = { x = 4, y = 1 },  -- Z
+                { start_position = { x = 4, y = 1 },
                   color = { 0, 255, 0 },
+                  symbol = "Z",
                   transformations = { { { x = -1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 0, y = -1 },
@@ -106,8 +108,9 @@ StockBlocks = { { start_position = { x = 4, y = 1 },  -- T
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
                                         { x = 1, y = 1 } } } },
-                { start_position = { x = 4, y = 1 },  -- S
+                { start_position = { x = 4, y = 1 }, 
                   color = { 100, 100, 175 },
+                  symbol = "S",
                   transformations = { { { x = 1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 0, y = -1 },
@@ -116,8 +119,9 @@ StockBlocks = { { start_position = { x = 4, y = 1 },  -- T
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
                                         { x = 1, y = -1 } } } },
-                { start_position = { x = 4, y = 0 },  -- J
+                { start_position = { x = 4, y = 0 }, 
                   color = { 255, 255, 100 },
+                  symbol = "J",
                   transformations = { { { x = -1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
@@ -134,8 +138,9 @@ StockBlocks = { { start_position = { x = 4, y = 1 },  -- T
                                         { x = 0, y = 0 },
                                         { x = 0, y = 1 },
                                         { x = -1, y = -1 } } } },
-                { start_position = { x = 4, y = 0 },  -- L
+                { start_position = { x = 4, y = 0 },
                   color = { 255, 0, 255 },
+                  symbol = "L",
                   transformations = { { { x = -1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
@@ -152,8 +157,9 @@ StockBlocks = { { start_position = { x = 4, y = 1 },  -- T
                                         { x = 0, y = 0 },
                                         { x = 0, y = 1 },
                                         { x = -1, y = 1 } } } },
-                { start_position = { x = 4, y = 0 },  -- I
+                { start_position = { x = 4, y = 0 },
                   color = { 255, 0, 0 },
+                  symbol = "I",
                   transformations = { { { x = -1, y = 0 },
                                         { x = 0, y = 0 },
                                         { x = 1, y = 0 },
@@ -162,8 +168,9 @@ StockBlocks = { { start_position = { x = 4, y = 1 },  -- T
                                         { x = 0, y = 0 },
                                         { x = 0, y = 1 },
                                         { x = 0, y = 2 } } } },
-                { start_position = { x = 4, y = 0 }, -- []
+                { start_position = { x = 4, y = 0 },
                   color = { 0, 0, 255 },
+                  symbol = "[]",
                   transformations = { { { x = 0, y = 0 },
                                         { x = 0, y = 1 },
                                         { x = 1, y = 0 },
@@ -224,6 +231,7 @@ function Tetris.huors.process_keyboard_input()
       local transformation_count = #sblock.transformations
       next_block.transformation_index = 
          next_block.transformation_index % transformation_count + 1
+      next_block = Tetris.util.adjust_position_after_rotation(next_block)
    end
    Tetris.state.keybuffer = {}
 
@@ -396,6 +404,44 @@ function Tetris.util.get_full_rows()
    end
 
    return _.filter(_.range(0, YSIZE - 1):to_array(), is_full_row)
+end
+
+function Tetris.util.adjust_position_after_rotation(block)
+   if Tetris.util.is_valid_pos(block) then
+      return block
+   end
+
+   local left_block = clone(block)
+   left_block.position.x = left_block.position.x - 1
+   if Tetris.util.is_valid_pos(left_block) then
+      return left_block
+   end
+
+   local right_block = clone(block)
+   right_block.position.x = right_block.position.x + 1
+   if Tetris.util.is_valid_pos(right_block) then
+      return right_block
+   end
+
+   local below_block = clone(block)
+   below_block.position.y = below_block.position.y + 1
+   if Tetris.util.is_valid_pos(below_block) then
+      return below_block
+   end
+
+   -- patch for "straight stick" in most right pos
+   sblock = StockBlocks[block.stock_index]
+   if sblock.symbol == "I" then
+      local left_left_block = clone(block)
+      left_left_block.position.x = left_left_block.position.x - 2
+      if Tetris.util.is_valid_pos(left_left_block) then
+         return left_left_block
+      end
+   end
+
+   return block -- cannot find a possible valid pos, returns an
+                -- invalid pos, which will be prevented in consecutive
+                -- guard statements.
 end
 
 function Tetris.graphics.draw_fps()
